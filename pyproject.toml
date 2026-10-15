@@ -3,7 +3,7 @@ name = "house-ml"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "Your Name",email = "you@example.com"}
+    {name = "Razuldev", email = "rasulsadigli1@gmail.com"}
 ]
 readme = "README.md"
 requires-python = ">=3.12"
