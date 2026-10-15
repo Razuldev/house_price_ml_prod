@@ -3,23 +3,33 @@ from sklearn.metrics import (
     root_mean_squared_error,
     r2_score
 )
-
 from sklearn.pipeline import Pipeline
 
+import logging
+
+from house_ml.artifacts.model_io import save_metadata,save_model
+from house_ml.config import Appconfig, load_config
 from house_ml.data.dataset import split_features_target
 from house_ml.data.load import load_housing_data
 from house_ml.data.split import stratified_split
 from house_ml.features.preprocessing import build_preprocessor
 from house_ml.models.model import build_model
+from house_ml.logging_config import configure_logging
+from house_ml.evaluation.cross_validation import run_cross_validation
+from house_ml.evaluation.metrics import validate_predictions, calculate_regression_metrics
+logger = logging.getLogger(__name__)
 
-def build_training_pipeline() -> Pipeline:
+def build_training_pipeline(
+        config: Appconfig
+        ) -> Pipeline:
+    
     '''
     Build complete preprocessing + model pipeline
     '''
 
     preprocessor = build_preprocessor()
 
-    model = build_model()
+    model = build_model(config.model)
 
     pipeline = Pipeline(
         steps = [
@@ -66,54 +76,87 @@ def evaluate_model(
     return metrics
 
 
-def main():
+def main() -> None:
 
-    print('Loading housing data...')
+    config = load_config()
 
-    housing = load_housing_data()
+    configure_logging(config.logging.level)
 
-    print(f'Dataset shape: {housing.shape}')
+    logger.info(
+        'Starting training pipeline'
+    )
+    #Load data
+    housing = load_housing_data(config.data)
 
-    print('Creating train/test split...')
+    
+    #Split tarin/test
+    train_set, test_set = stratified_split(housing, config.split)
 
-    train_set, test_set = stratified_split(housing)
+    X_train, y_train = split_features_target(train_set,config.target)
+    X_test, y_test = split_features_target(test_set, config.target)
 
-    X_train, y_train = split_features_target(train_set)
-    X_test, y_test = split_features_target(test_set)
+    logger.info(
+        'Training rows: %d',
+        len(X_train)
+    )
 
-    print(f'Training samples: {len(X_train)}')
+    logger.info(
+        'Test rows: %d',
+        len(X_test)
+    )
+    # Build pipeline
+    pipeline = build_training_pipeline(config)
 
-    print(f'Test samples: {len(X_test)}')
+    cv_metrics = run_cross_validation(pipeline, X_train, y_train, config.evaluation)
 
-    print('Building training pipeline...')
+    #Final training
+    logger.info(
+        'Training final model',
+        'on full training dataset'
+    )
 
-    pipeline = build_training_pipeline()
-
-    print(pipeline)
-
-    print('Training model...')
 
     pipeline.fit(X_train, y_train)
 
-    print('Training complete.')
+    #Final test evaluation
 
-    print('Evaluating model...')
+    predictions = pipeline.predict(X_test)
 
-    metrics = evaluate_model(pipeline, X_test, y_test)
+    validate_predictions(predictions)
 
-    print(
-        f'RMSE: '
-        f"{metrics['rmse']:.2f}"
+    test_metrics = calculate_regression_metrics(y_test, predictions)
+
+    # metrics = evaluate_model(pipeline, X_test, y_test)
+
+
+
+    logger.info(
+        'Test RMSE: %.2f',
+        test_metrics['rmse']
     )
 
-    print(
-        'MAE: '
-        f'{metrics['mae']:.2f}'
+    logger.info(
+        'Test MAE: %.2f',
+        test_metrics['mae']
     )
 
-    print(f'R^2: '
-          f'{metrics['r2']:.4f}')
+    logger.info(
+        'Test R^2: %.4f',
+        test_metrics['r2']
+    )
 
+
+    # Artifact persistane
+
+    all_metrics = {
+        **cv_metrics,
+        **test_metrics
+    }
+
+    save_model(pipeline, config.artifacts)
+    save_metadata(all_metrics, config.artifacts)
+
+    logger.info('Training pipeline completed')
 
 if __name__ == '__main__':
     main()
