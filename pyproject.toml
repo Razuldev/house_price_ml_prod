@@ -21,3 +21,25 @@ packages = [{include = "house_ml", from = "src"}]
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[dependency-groups]
+dev = [
+    "pytest (>=9.1.1,<10.0.0)",
+    "ruff (>=0.17.1,<0.18.0)"
+]
+
+[tool.ruff]
+line-length = 88
+target-version ="py312"
+
+[toll.ruff.lint]
+select = [
+    'E',
+    'F',
+    'I',
+    'B'
+]
+
+[tool.ruff.format]
+quote-style = 'double'
+indent-style = "space"
