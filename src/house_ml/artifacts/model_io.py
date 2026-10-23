@@ -1,17 +1,14 @@
-from datetime import datetime, timezone
-from pathlib import Path
 import json
 import logging
 import platform
 import subprocess
+from datetime import datetime, timezone
+from pathlib import Path
 
 import joblib
 import sklearn
 
-from house_ml.config import (
-    ArtifactConfig,
-    PROJECT_ROOT
-)
+from house_ml.config import PROJECT_ROOT, ArtifactConfig
 
 logger = logging.getLogger(__name__)
 
