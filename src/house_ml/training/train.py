@@ -1,9 +1,7 @@
 import logging
 
-from sklearn.pipeline import Pipeline
-
 from house_ml.artifacts.model_io import save_metadata, save_model
-from house_ml.config import AppConfig, load_config
+from house_ml.config import load_config
 from house_ml.data.dataset import split_features_target
 from house_ml.data.load import load_housing_data
 from house_ml.data.split import stratified_split
@@ -12,24 +10,10 @@ from house_ml.evaluation.metrics import (
     calculate_regression_metrics,
     validate_predictions,
 )
-from house_ml.features.preprocessing import build_preprocessor
 from house_ml.logging_config import configure_logging
-from house_ml.models.model import build_model
+from house_ml.models.pipeline import build_pipeline
 
 logger = logging.getLogger(__name__)
-
-
-def build_training_pipeline(config: AppConfig) -> Pipeline:
-    """
-    Build complete preprocessing + model pipeline
-    """
-    preprocessor = build_preprocessor()
-
-    model = build_model(config.model)
-
-    pipeline = Pipeline(steps=[("preprocessing", preprocessor), ("model", model)])
-
-    return pipeline
 
 
 def main() -> None:
@@ -53,7 +37,7 @@ def main() -> None:
     logger.info("Test rows: %d", len(X_test))
 
     # Build pipeline
-    pipeline = build_training_pipeline(config)
+    pipeline = build_pipeline(config)
 
     cv_metrics = run_cross_validation(pipeline, X_train, y_train, config.evaluation)
 

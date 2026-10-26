@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 from house_ml.config import load_config
-from house_ml.training.train import build_training_pipeline
+from house_ml.models.pipeline import build_pipeline
 
 
 def make_small_dataset():
@@ -72,7 +72,7 @@ def make_small_dataset():
 def test_training_pipeline_smoke():
     config = load_config()
 
-    pipeline = build_training_pipeline(config)
+    pipeline = build_pipeline(config)
 
     X, y = make_small_dataset()
 
