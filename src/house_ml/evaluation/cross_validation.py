@@ -1,6 +1,8 @@
 import logging
+
 import numpy as np
 from sklearn.model_selection import cross_val_score
+
 from house_ml.config import EvaluationConfig
 
 logger = logging.getLogger(__name__)

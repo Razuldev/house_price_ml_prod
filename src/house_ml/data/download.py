@@ -1,10 +1,9 @@
-from pathlib import Path
 import logging
 import tarfile
 import urllib.request
+from pathlib import Path
 
 from house_ml.config import PROJECT_ROOT, DataConfig
-
 
 logger = logging.getLogger(__name__)
 

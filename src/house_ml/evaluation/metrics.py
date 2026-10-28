@@ -1,6 +1,5 @@
 import numpy as np
-
-from sklearn.metrics import mean_absolute_error, root_mean_squared_error, r2_score
+from sklearn.metrics import mean_absolute_error, r2_score, root_mean_squared_error
 
 
 def calculate_regression_metrics(y_true, y_pred) -> dict[str, float]:

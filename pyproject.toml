@@ -3,7 +3,7 @@ name = "house-ml"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "Razuldev", email = "rasulsadigli1@gmail.com"}
+    {name = "Your Name",email = "you@example.com"}
 ]
 readme = "README.md"
 requires-python = ">=3.12"
@@ -12,7 +12,8 @@ dependencies = [
     "numpy (>=2.5.3,<3.0.0)",
     "scikit-learn (>=1.9.1,<2.0.0)",
     "pyyaml (>=6.0.3,<7.0.0)",
-    "joblib (>=1.6.0,<2.0.0)"
+    "joblib (>=1.6.0,<2.0.0)",
+    "pydantic (>=2.14.1,<3.0.0)"
 ]
 
 [tool.poetry]
@@ -30,9 +31,9 @@ dev = [
 
 [tool.ruff]
 line-length = 88
-target-version ="py312"
+target-version = "py312"
 
-[toll.ruff.lint]
+[tool.ruff.lint]
 select = [
     'E',
     'F',
@@ -41,5 +42,10 @@ select = [
 ]
 
 [tool.ruff.format]
-quote-style = 'double'
+quote-style = "double"
 indent-style = "space"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-ra"

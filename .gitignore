@@ -220,14 +220,29 @@ __marimo__/
 .streamlit/secrets.toml
 
 
-.venv/
+# ML artifacts
+artifacts/models/
+*.joblib
+
+# Datasets
+datasets/
+
+# Python cache
 __pycache__/
+*.pyc
 .pytest_cache/
 .ruff_cache/
+
+# Environment
 .env
+.venv/
+
+
+artifacts/models/
 datasets/
-artifacts/
-mlruns/
-*.pkl
-*.joblib
-.DS_Store
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.venv/
+.env.DS_Store

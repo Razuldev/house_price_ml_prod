@@ -1,6 +1,6 @@
 import pandas as pd
 
-from house_ml.config import load_config, TargetConfig
+from house_ml.config import TargetConfig, load_config
 from house_ml.data.load import load_housing_data
 from house_ml.data.split import stratified_split
 

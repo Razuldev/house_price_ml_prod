@@ -1,10 +1,10 @@
-from pathlib import Path
-import pandas as pd
 import logging
+from pathlib import Path
+
+import pandas as pd
 
 from house_ml.config import PROJECT_ROOT, DataConfig, load_config
 from house_ml.data.download import ensure_dataset_exists
-
 
 logger = logging.getLogger(__name__)
 
@@ -28,8 +28,10 @@ def load_housing_data(config: DataConfig) -> pd.DataFrame:
     csv_path = get_csv_path(config)
 
     if not csv_path.exists():
-        raise FileNotFoundError(f"""{csv_path} does not exist.
-                                Please ensure the dataset is downloaded and extracted.""")
+        raise FileNotFoundError(f"""
+                            {csv_path} does not exist. 
+                            Please ensure the dataset is 
+                            downloaded and extracted.""")
 
     logger.info("Loading dataset from %s", csv_path)
 

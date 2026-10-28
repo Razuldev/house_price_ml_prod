@@ -1,7 +1,7 @@
 from sklearn.base import RegressorMixin
 from sklearn.ensemble import RandomForestRegressor
 
-from house_ml.config import load_config, ModelConfig
+from house_ml.config import ModelConfig, load_config
 
 
 def build_model(config: ModelConfig) -> RegressorMixin:

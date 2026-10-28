@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-from house_ml.config import load_config, SplitConfig
+from house_ml.config import SplitConfig, load_config
 from house_ml.data.load import load_housing_data
 
 
