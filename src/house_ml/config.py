@@ -1,9 +1,12 @@
+import os
 from dataclasses import dataclass
 from pathlib import Path
 
 import yaml
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+_DEFAULT_PROJECT_ROOT = Path(__file__).resolve().parents[2]
+
+PROJECT_ROOT = Path(os.getenv("HOUSING_ML_ROOT", str(_DEFAULT_PROJECT_ROOT)))
 
 DEFAULT_CONFIG_PATH = PROJECT_ROOT / "configs" / "config.yaml"
 
@@ -68,6 +71,12 @@ class LoggingConfig:
 
 
 @dataclass(frozen=True)
+class ApiConfig:
+    host: str
+    port: int
+
+
+@dataclass(frozen=True)
 class AppConfig:
     data: DataConfig
     split: SplitConfig
@@ -76,6 +85,7 @@ class AppConfig:
     evaluation: EvaluationConfig
     artifacts: ArtifactConfig
     logging: LoggingConfig
+    api: ApiConfig
 
 
 def load_config(config_path: Path = DEFAULT_CONFIG_PATH) -> AppConfig:
@@ -108,6 +118,7 @@ def load_config(config_path: Path = DEFAULT_CONFIG_PATH) -> AppConfig:
         evaluation=EvaluationConfig(**raw["evaluation"]),
         artifacts=ArtifactConfig(**raw["artifacts"]),
         logging=LoggingConfig(**raw["logging"]),
+        api=ApiConfig(**raw["api"]),
     )
 
 
